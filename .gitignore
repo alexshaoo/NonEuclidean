@@ -396,3 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+*.vsidx
+NonEuclidean/.vs/NonEuclidean/v17/.suo
+*.db
+*.vcxproj
+*.filters
