@@ -1,15 +1,16 @@
 // NonEuclidean.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
-#include "SFML/Graphics.hpp"
+#include "main.hpp";
+#include "SFML/Graphics.hpp";
 
 int main()
 {
-    std::cout << "Hello World!\n";
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Test");
-    sf::Event e;
+    sf::RenderWindow window(sf::VideoMode(x_dim*scale, y_dim*scale), "Non-Euclidean Game Engine");
 
+
+
+    sf::Event e;
     while (window.isOpen()) 
     {
         while (window.pollEvent(e))
@@ -17,7 +18,12 @@ int main()
             if (e.type == sf::Event::Closed)
                 window.close();
         }
+
+        window.clear();
+        window.display();
     }
+
+    return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
