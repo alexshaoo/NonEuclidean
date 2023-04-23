@@ -1,7 +1,6 @@
 #pragma once
 
 #include "main.hpp"
-#include "node.hpp"
 
 struct Position
 {

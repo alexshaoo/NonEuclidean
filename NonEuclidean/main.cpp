@@ -2,8 +2,8 @@
 //
 
 #pragma once
-#include "main.hpp";
-#include "SFML/Graphics.hpp";
+#include "main.hpp"
+#include "SFML/Graphics.hpp"
 
 int main()
 {

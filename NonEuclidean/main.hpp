@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <SFML/Graphics.hpp>
+
 const int x_dim = 192;
 const int y_dim = 108;
 const int scale = 5;
@@ -25,5 +27,3 @@ const std::vector<std::string> level = {
 	"..............x...............", // 14
 	"..............x..............."  // 15
 };
-
-#endif
