@@ -1,5 +1,9 @@
 #pragma once
-class render
-{
-};
+
+#include "main.hpp"
+#include "player.hpp"
+
+void render(sf::Image& image, Player* player);
+
+#endif
 
