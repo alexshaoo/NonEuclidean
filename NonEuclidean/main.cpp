@@ -3,14 +3,16 @@
 
 #pragma once
 #include "main.hpp"
+#include "render.hpp"
+#include "node.hpp"
 #include "SFML/Graphics.hpp"
 
-int main()
-{
+int main() {
+    sf::Image image;
+    image.create(x_dim, y_dim);
+    Player* player = loadMap();
+
     sf::RenderWindow window(sf::VideoMode(x_dim*scale, y_dim*scale), "Non-Euclidean Game Engine");
-
-
-
     sf::Event e;
     while (window.isOpen()) 
     {
@@ -21,10 +23,21 @@ int main()
         }
 
         window.clear();
+        render(image, player);
         window.display();
     }
 
     return 0;
+}
+
+Player* loadMap() {
+    std::vector<std::vector<Node*>> map(16);
+    for (int i = 0; i <= 15; ++i) {
+        map[i].resize(30, nullptr);
+    }
+
+    Position pos;
+    pos.node = map[8][4];
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

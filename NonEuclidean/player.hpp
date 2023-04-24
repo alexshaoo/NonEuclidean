@@ -8,8 +8,7 @@ struct Position
 	int y;
 };
 
-class Player
-{
+class Player {
 private:
 	Position position;
 public:
