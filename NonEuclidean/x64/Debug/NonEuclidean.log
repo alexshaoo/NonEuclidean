@@ -1,0 +1,5 @@
+﻿  main.cpp
+C:\Users\alexs\Documents\GitHub\NonEuclidean\NonEuclidean\main.cpp(13,22): error C3861: 'loadMap': identifier not found
+  player.cpp
+  render.cpp
+  Generating Code...
