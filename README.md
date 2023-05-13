@@ -29,4 +29,4 @@ If you encounter issues while setting up the project, try the following solution
 * If the SFML installation is causing issues, follow the steps outlined in this YouTube tutorial: https://www.youtube.com/watch?v=lFzpkvrscs4
 
 ## Plan Moving Forward 🤔
-At the time of writing, we're working on expanding the game mechanics and adding more levels to the game. Stay tuned for updates!
+At the time of writing, I'm  on expanding the game mechanics and adding more levels to the game. Stay tuned for updates!
