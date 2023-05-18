@@ -6,6 +6,9 @@
 #include <SFML/Graphics.hpp>
 #include <complex>
 
+// for constants
+#define _USE_MATH_DEFINES
+
 const int x_dim = 192;
 const int y_dim = 108;
 const int scale = 5;
