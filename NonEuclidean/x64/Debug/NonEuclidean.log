@@ -1,6 +1,2 @@
 ﻿  main.cpp
-C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(13,22): error C3861: 'loadMap': identifier not found
-C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(40,9): error C2039: 'node': is not a member of 'Position'
-C:\GitHub\NonEuclidean\NonEuclidean\player.hpp(5,8): message : see declaration of 'Position'
-  render.cpp
-  Generating Code...
+C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(18): error C4716: 'loadMap': must return a value
