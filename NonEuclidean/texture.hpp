@@ -3,6 +3,7 @@
 #include "main.hpp"
 
 class Texture {
+private:
 public:
 	const int width, height;
 	sf::Color** data;
@@ -12,6 +13,6 @@ public:
 };
 
 extern Texture redWallTexture;
-extern Texture blueWallTexture;
 extern Texture greenWallTexture;
+extern Texture blueWallTexture;
 extern Texture yellowWallTexture;
