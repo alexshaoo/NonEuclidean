@@ -3,8 +3,7 @@
 #include "main.hpp"
 #include "node.hpp"
 
-struct Position
-{
+struct Position {
 	Node* node;
 	std::complex<double> offset;
 	double angle;

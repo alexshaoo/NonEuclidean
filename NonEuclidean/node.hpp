@@ -8,8 +8,7 @@ enum class Direction {
 	BACK = 3
 };
 
-class Node
-{
+class Node {
 private:
 	bool wall;
 	Node* neighbours[4];

@@ -23,12 +23,14 @@
     <ClCompile Include="node.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="render.cpp" />
+    <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.hpp" />
     <ClInclude Include="node.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="render.hpp" />
+    <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
