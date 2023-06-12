@@ -1,11 +1,7 @@
-// NonEuclidean.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#pragma once
 #include "main.hpp"
 #include "render.hpp"
 #include "node.hpp"
-#include "SFML/Graphics.hpp"
+#include "player.hpp"
 
 Player* loadMap() {
     std::vector<std::vector<Node*>> world(16);
@@ -70,21 +66,74 @@ Player* loadMap() {
 
 int main() {
     sf::Image image;
+    sf::Texture texture;
+    sf::Sprite sprite;
     image.create(x_dim, y_dim);
+    texture.create(x_dim, y_dim);
+    texture.update(image);
+    sprite.setTexture(texture);
+    sprite.setPosition(0, 0);
+    sprite.setScale(scale, scale);
     Player* player = loadMap();
 
     sf::RenderWindow window(sf::VideoMode(x_dim * scale, y_dim * scale), "Non-Euclidean Game Engine");
-    sf::Event e;
-    while (window.isOpen())
-    {
-        while (window.pollEvent(e))
-        {
-            if (e.type == sf::Event::Closed)
-                window.close();
+    window.setVerticalSyncEnabled(true);
+    while (window.isOpen()) {
+        sf::Event e;
+        while (window.pollEvent(e)) {
+            switch (e.type) {
+                /*case sf::Event::KeyPressed:
+                    if (e.key.code == sf::Keyboard::Left) {
+						player->turnLeft();
+					}
+                    if (e.key.code == sf::Keyboard::Right) {
+						player->turnRight();
+					}
+                    if (e.key.code == sf::Keyboard::Up) {
+						player->moveForward();
+					}
+                    if (e.key.code == sf::Keyboard::Down) {
+						player->moveBackward();
+					}
+					break;*/
+            case sf::Event::KeyPressed:
+                switch (e.key.code) {
+                case sf::Keyboard::Escape:
+                    window.close();
+                    break;
+                }
+                break;
+            case sf::Event::Closed:
+				window.close();
+				break;
+			}
         }
+
+        double rotate = 0.0;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+            rotate += 0.04;
+        }
+	    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            rotate -= 0.04;
+        }
+        player->rotate(rotate);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            player->move(Direction::UP, 0.05);
+	    }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		    player->move(Direction::DOWN, 0.05);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            player->move(Direction::LEFT, 0.05);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		    player->move(Direction::RIGHT, 0.05);
+	    }
 
         window.clear();
         render(image, player);
+        texture.update(image);
+        window.draw(sprite);
         window.display();
     }
 
