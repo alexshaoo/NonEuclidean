@@ -4,10 +4,10 @@
 #include "texture.hpp"
 
 enum class Direction {
-	RIGHT = 0,
-	FORWARD = 1,
-	LEFT = 2,
-	BACK = 3
+	UP = 0,
+	LEFT = 1,
+	DOWN = 2,
+	RIGHT = 3,
 };
 
 class Node {
@@ -22,8 +22,8 @@ public:
 	void removeNeighbour(Direction direction);
 	Node* getNeighbour(Direction direction);
 	bool isWall();
-	std::pair<Node*, double> castRay(std::complex<double> start, double angle, double distanceSoFar, double* offset);
 	Texture* getTexture();
+	std::pair<Node*, double> castRay(std::complex<double> start, double angle, double distanceSoFar, double* xOffset);
 };
 
 class Floor : public Node {
