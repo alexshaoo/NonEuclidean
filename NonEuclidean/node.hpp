@@ -17,12 +17,13 @@ private:
 	Texture* texture;
 public:
 	Node(bool wall, Texture* texture=nullptr);
+	virtual ~Node()=0;
 	void addNeighbour(Direction direction, Node* neighbour);
 	void removeNeighbour(Direction direction);
 	Node* getNeighbour(Direction direction);
 	bool isWall();
 	std::pair<Node*, double> castRay(std::complex<double> start, double angle, double distanceSoFar, double* offset);
-	virtual ~Node()=0;
+	Texture* getTexture();
 };
 
 class Floor : public Node {

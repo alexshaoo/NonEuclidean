@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <complex>
 
-// for constants
+// for constants like M_PI
 #define _USE_MATH_DEFINES
 
 const int x_dim = 192;
