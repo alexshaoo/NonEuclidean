@@ -8,7 +8,15 @@ Texture::Texture(int width, int height) : width(width), height(height) {
 }
 
 Texture::Texture(int width, int height, std::initializer_list<std::initializer_list<uint32_t>> pixels) : Texture::Texture(width, height) {
-	;
+	int y = 0;
+	for (const auto& row : pixels) {
+		int x = 0;
+		for (const auto& colour : row) {
+			data[y][x] = sf::Color(colour);
+			++x;
+		}
+		++y;
+	}
 }
 
 Texture::~Texture() {
