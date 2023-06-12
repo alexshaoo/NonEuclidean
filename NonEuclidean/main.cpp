@@ -39,19 +39,19 @@ Player* loadMap() {
     for (int h = 0; h <= 15; h++) {
         for (int w = 0; w <= 29; w++) {
             if (level[h][w] == '.') {
-                if (h > 0 && level[h - 1][w] != 'x') world[h][w]->addNeighbour(Direction::FORWARD, world[h - 1][w]);
-                if (h < 15 && level[h + 1][w] != 'x') world[h][w]->addNeighbour(Direction::BACK, world[h + 1][w]);
+                if (h > 0 && level[h - 1][w] != 'x') world[h][w]->addNeighbour(Direction::UP, world[h - 1][w]);
+                if (h < 15 && level[h + 1][w] != 'x') world[h][w]->addNeighbour(Direction::DOWN, world[h + 1][w]);
                 if (w > 0 && level[h][w - 1] != 'x') world[h][w]->addNeighbour(Direction::LEFT, world[h][w - 1]);
                 if (w < 29 && level[h][w + 1] != 'x') world[h][w]->addNeighbour(Direction::RIGHT, world[h][w + 1]);
             }
         }
     }
 
-    world[5][7]->removeNeighbour(Direction::FORWARD);
-    world[5][7]->addNeighbour(Direction::FORWARD, world[11][22]);
+    world[5][7]->removeNeighbour(Direction::UP);
+    world[5][7]->addNeighbour(Direction::UP, world[11][22]);
 
-    world[11][22]->removeNeighbour(Direction::BACK);
-    world[11][22]->addNeighbour(Direction::BACK, world[5][7]);
+    world[11][22]->removeNeighbour(Direction::DOWN);
+    world[11][22]->addNeighbour(Direction::DOWN, world[5][7]);
 
     world[12][4]->removeNeighbour(Direction::LEFT);
     world[12][4]->addNeighbour(Direction::LEFT, world[12][8]);
@@ -61,7 +61,7 @@ Player* loadMap() {
 
     Position pos;
     pos.node = world[8][4];
-    pos.offset = 0.5 + 0.5i;
+    pos.offset = std::complex<double>(0.5, 0.5);
     pos.angle = 0.9;
     Player* player = new Player(pos);
 

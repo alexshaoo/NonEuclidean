@@ -37,7 +37,7 @@ void render(sf::Image& image, Player* player) {
 		for (int y = y_dim / 2 - screenWallHeight / 2; y < y_dim / 2 + screenWallHeight / 2; ++y) {
 			double tx = xOffset;
 			double ty = ((double)((double)y + 0.5 - (double)y_dim / 2) / originalWallHeight) + 0.5;
-			sf::Color colour = wall->getTexture()->data[(size_t)(ty * wall->getTexture()->height)][(size_t)(tx * wall->getTexturee()->width)];
+			sf::Color colour = wall->getTexture()->data[(size_t)(ty * wall->getTexture()->height)][(size_t)(tx * wall->getTexture()->width)];
 			image.setPixel(x, y, colour);
 		}
 	}

@@ -1,13 +1,14 @@
 #pragma once
 
+// for constants like M_PI
+#define _USE_MATH_DEFINES
+
 #include <iostream>
 #include <vector>
 #include <math.h>
 #include <SFML/Graphics.hpp>
 #include <complex>
-
-// for constants like M_PI
-#define _USE_MATH_DEFINES
+#include <stdexcept>
 
 const int x_dim = 192;
 const int y_dim = 108;
