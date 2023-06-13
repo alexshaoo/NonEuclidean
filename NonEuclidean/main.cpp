@@ -3,7 +3,8 @@
 #include "node.hpp"
 #include "player.hpp"
 
-Player* loadMap() {
+
+std::vector<std::vector<Node*>> mapOne() {
     std::vector<std::vector<Node*>> world(16);
     for (int i = 0; i <= 15; ++i) {
         world[i].resize(30, nullptr);
@@ -54,6 +55,12 @@ Player* loadMap() {
 
     world[12][8]->removeNeighbour(Direction::RIGHT);
     world[12][8]->addNeighbour(Direction::RIGHT, world[12][4]);
+
+    return world;
+}
+
+Player* loadMap() {
+    std::vector<std::vector<Node*>> world = mapOne();
 
     Position pos;
     pos.node = world[8][4];
@@ -109,6 +116,7 @@ int main() {
 			}
         }
 
+        // scuffed rotation system
         double rotate = 0.0;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             rotate += 0.04;
@@ -116,6 +124,7 @@ int main() {
 	    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             rotate -= 0.04;
         }
+
         player->rotate(rotate);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
             player->move(Direction::UP, 0.05);
