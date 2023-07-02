@@ -1,7 +1,20 @@
 ﻿  main.cpp
-  node.cpp
-  player.cpp
-  render.cpp
-  texture.cpp
-  Generating Code...
+C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(119,130): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(119,96): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
   NonEuclidean.vcxproj -> C:\GitHub\NonEuclidean\NonEuclidean\x64\Debug\NonEuclidean.exe
