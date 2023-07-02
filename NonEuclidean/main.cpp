@@ -82,10 +82,22 @@ int main() {
     sprite.setTexture(texture);
     sprite.setPosition(0, 0);
     sprite.setScale(scale, scale);
-    Player* player = loadMap();
+    Player* player = loadPlayer();
 
-    sf::RenderWindow window(sf::VideoMode(x_dim * scale, y_dim * scale), "Non-Euclidean Game Engine");
+    sf::RenderWindow window(sf::VideoMode(X_DIM * scale, Y_DIM * scale), "Non-Euclidean Game Engine");
     window.setVerticalSyncEnabled(true);
+
+    bool inGame = true;
+    sf::RectangleShape button(sf::Vector2f(200, 50));
+    button.setFillColor(sf::Color::Red);
+    button.setPosition((X_DIM * scale) / 2 - 100, (Y_DIM * scale) / 2 - 25);
+
+    sf::Text buttonText;
+    buttonText.setString("Quit");
+    buttonText.setCharacterSize(24);
+    buttonText.setFillColor(sf::Color::White);
+    buttonText.setStyle(sf::Text::Bold);
+    buttonText.setPosition((X_DIM * scale) / 2 - 30, (Y_DIM * scale) / 2 - 15);
 
     while (window.isOpen()) {
         sf::Event e;
@@ -94,7 +106,7 @@ int main() {
             case sf::Event::KeyPressed:
                 switch (e.key.code) {
                 case sf::Keyboard::Escape:
-                    inGame = !inGame; // Switch between game and menu
+                    inGame = !inGame;
                     break;
                 }
                 break;
@@ -103,7 +115,6 @@ int main() {
                 break;
             case sf::Event::MouseButtonPressed:
                 if (!inGame && button.getGlobalBounds().contains(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y)) {
-                    // Quit button pressed, close window
                     window.close();
                 }
                 break;
@@ -112,7 +123,6 @@ int main() {
 
         window.clear();
         if (inGame) {
-            // scuffed rotation system
             double rotate = 0.0;
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                 rotate += PLAYER_ROTATION;
@@ -120,7 +130,6 @@ int main() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
                 rotate -= PLAYER_ROTATION;
             }
-
             player->rotate(rotate);
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
                 player->move(Direction::UP, PLAYER_MOVE_DISTANCE);
@@ -145,53 +154,6 @@ int main() {
         }
         window.display();
     }
-
-    //while (window.isOpen()) {
-    //    sf::Event e;
-    //    while (window.pollEvent(e)) {
-    //        switch (e.type) {
-    //            case sf::Event::KeyPressed:
-    //                switch (e.key.code) {
-    //                    case sf::Keyboard::Escape:
-    //                        window.close();
-    //                        break;
-    //                    }
-    //                    break;
-    //            case sf::Event::Closed:
-				//    window.close();
-				//    break;
-			 //   }
-    //    }
-
-    //    // scuffed rotation system
-    //    double rotate = 0.0;
-    //    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-    //        rotate += PLAYER_ROTATION;
-    //    }
-	   // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-    //        rotate -= PLAYER_ROTATION;
-    //    }
-
-    //    player->rotate(rotate);
-    //    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-    //        player->move(Direction::UP, PLAYER_MOVE_DISTANCE);
-	   // }
-    //    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		  //  player->move(Direction::DOWN, PLAYER_MOVE_DISTANCE);
-    //    }
-    //    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-    //        player->move(Direction::LEFT, PLAYER_MOVE_DISTANCE);
-    //    }
-    //    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		  //  player->move(Direction::RIGHT, PLAYER_MOVE_DISTANCE);
-	   // }
-
-    //    window.clear();
-    //    render(image, player);
-    //    texture.update(image);
-    //    window.draw(sprite);
-    //    window.display();
-    //}
 
     return 0;
 }

@@ -1,5 +1,5 @@
 ﻿  main.cpp
-C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(119,130): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(117,130): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -8,7 +8,7 @@ C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(119,130): warning C4244: 'argument'
           [
               T=float
           ]
-C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(119,96): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(117,96): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -17,4 +17,7 @@ C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(119,96): warning C4244: 'argument':
           [
               T=float
           ]
+  texture.cpp
+  Generating Code...
+  LINK : C:\GitHub\NonEuclidean\NonEuclidean\x64\Debug\NonEuclidean.exe not found or not built by the last incremental link; performing full link
   NonEuclidean.vcxproj -> C:\GitHub\NonEuclidean\NonEuclidean\x64\Debug\NonEuclidean.exe
