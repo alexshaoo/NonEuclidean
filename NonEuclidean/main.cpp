@@ -107,7 +107,7 @@ int main() {
     buttonText.setCharacterSize(24);
     buttonText.setFillColor(sf::Color::White);
     buttonText.setStyle(sf::Text::Bold);
-    buttonText.setPosition((X_DIM * scale) / 2 - 30, (Y_DIM * scale) / 2 - 15);
+    buttonText.setPosition((X_DIM * scale) / 2 - MAP_WIDTH, (Y_DIM * scale) / 2 - MAP_HEIGHT);
 
     while (window.isOpen()) {
         sf::Event e;

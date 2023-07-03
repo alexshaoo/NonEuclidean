@@ -10,9 +10,9 @@
 #include <complex>
 #include <stdexcept>
 
-const int X_DIM = 192;
-const int Y_DIM = 108;
-const int scale = 5;
+const int X_DIM = 320;
+const int Y_DIM = 180;
+const int scale = 2;
 const int MAP_WIDTH = 30;
 const int MAP_HEIGHT = 16;
 
