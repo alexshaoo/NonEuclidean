@@ -16,7 +16,7 @@ const int scale = 5;
 const int MAP_WIDTH = 30;
 const int MAP_HEIGHT = 16;
 
-const double PLAYER_ROTATION = 0.04;
+const double MOUSE_SENSITIVITY = 0.005;
 const double PLAYER_MOVE_DISTANCE = 0.05;
 
 const std::vector<std::string> level = {

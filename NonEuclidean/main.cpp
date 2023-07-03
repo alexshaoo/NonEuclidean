@@ -83,9 +83,18 @@ int main() {
     sprite.setPosition(0, 0);
     sprite.setScale(scale, scale);
     Player* player = loadPlayer();
+    
 
     sf::RenderWindow window(sf::VideoMode(X_DIM * scale, Y_DIM * scale), "Non-Euclidean Game Engine");
     window.setVerticalSyncEnabled(true);
+
+    sf::Vector2i oldMousePosition = sf::Mouse::getPosition(window);
+
+    sf::Font font;
+    if (!font.loadFromFile("./ubuntu.ttf")) {
+        std::cerr << "Failed to load font, check your system directory!" << std::endl;
+        return EXIT_FAILURE;
+    }
 
     bool inGame = true;
     sf::RectangleShape button(sf::Vector2f(200, 50));
@@ -93,6 +102,7 @@ int main() {
     button.setPosition((X_DIM * scale) / 2 - 100, (Y_DIM * scale) / 2 - 25);
 
     sf::Text buttonText;
+    buttonText.setFont(font);
     buttonText.setString("Quit");
     buttonText.setCharacterSize(24);
     buttonText.setFillColor(sf::Color::White);
@@ -123,13 +133,11 @@ int main() {
 
         window.clear();
         if (inGame) {
-            double rotate = 0.0;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                rotate += PLAYER_ROTATION;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-                rotate -= PLAYER_ROTATION;
-            }
+            sf::Vector2i newMousePosition = sf::Mouse::getPosition(window);
+            double rotate = -(newMousePosition.x - oldMousePosition.x) * MOUSE_SENSITIVITY;
+            player->rotate(rotate);
+            oldMousePosition = newMousePosition;
+
             player->rotate(rotate);
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
                 player->move(Direction::UP, PLAYER_MOVE_DISTANCE);
@@ -146,8 +154,7 @@ int main() {
             render(image, player);
             texture.update(image);
             window.draw(sprite);
-        }
-        else {
+        } else {
             window.clear(sf::Color::White);
             window.draw(button);
             window.draw(buttonText);
