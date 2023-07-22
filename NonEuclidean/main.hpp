@@ -12,11 +12,11 @@
 
 const int X_DIM = 320;
 const int Y_DIM = 180;
-const int scale = 2;
+const int scale = 5;
 const int MAP_WIDTH = 30;
 const int MAP_HEIGHT = 16;
 
-const double MOUSE_SENSITIVITY = 0.005;
+const double MOUSE_SENSITIVITY = 0.0005;
 const double PLAYER_MOVE_DISTANCE = 0.05;
 
 const std::vector<std::string> level = {

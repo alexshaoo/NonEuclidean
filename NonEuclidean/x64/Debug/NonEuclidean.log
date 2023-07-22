@@ -1,5 +1,5 @@
 ﻿  main.cpp
-C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(127,130): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(141,127): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -8,7 +8,25 @@ C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(127,130): warning C4244: 'argument'
           [
               T=float
           ]
-C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(127,96): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(141,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(144,129): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\GitHub\NonEuclidean\NonEuclidean\main.cpp(144,95): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
