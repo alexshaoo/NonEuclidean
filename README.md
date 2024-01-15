@@ -1,7 +1,7 @@
 # NonEuclidean
 
 ## Info
-NonEuclidean is a 2D game engine that simulates non-euclidean geometries. Players can explore the world and solve puzzles using these unique geometric mechanics.
+NonEuclidean is a 3D game engine that simulates non-euclidean geometries. Players can explore the world and solve puzzles using these unique geometric mechanics.
 
 ## Technologies
 This project was built with:
