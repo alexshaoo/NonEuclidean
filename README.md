@@ -9,7 +9,6 @@ This project was built with:
 * SFML library for graphics and input handling
 
 ## setup
-(✿◡‿◡)
 1. Install SFML by following the instructions on the official SFML website.
 2. Clone this repository onto your local machine.
 3. Build and run the project using your favorite IDE or command line tools.
