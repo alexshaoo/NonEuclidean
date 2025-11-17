@@ -402,3 +402,35 @@ NonEuclidean/.vs/NonEuclidean/v17/.suo
 *.db
 *.vcxproj
 *.filters
+
+# CMake build files
+build/
+cmake-build-*/
+out/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+# Compiled binaries
+NonEuclidean
+NonEuclidean.exe
+*.exe
+*.out
+*.app
+
+# macOS
+.DS_Store
+*.dSYM/
+
+# Linux
+*.so
+*.a
+
+# IDEs
+.idea/
+*.swp
+*.swo
