@@ -415,9 +415,8 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
-# Compiled binaries
-NonEuclidean
-NonEuclidean.exe
+# Compiled binaries (in build directory only)
+/build/NonEuclidean
 *.exe
 *.out
 *.app
