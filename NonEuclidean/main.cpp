@@ -3,13 +3,14 @@
 #include "node.hpp"
 #include "player.hpp"
 
-
-std::vector<std::vector<Node*>> mapOne() {
+// Helper function to build world from level data
+std::vector<std::vector<Node*>> buildWorld(const std::vector<std::string>& level) {
     std::vector<std::vector<Node*>> world(MAP_HEIGHT);
     for (int i = 0; i < MAP_HEIGHT; ++i) {
         world[i].resize(MAP_WIDTH, nullptr);
     }
 
+    // Create nodes based on level layout
     for (int h = 0; h < MAP_HEIGHT; h++) {
         for (int w = 0; w < MAP_WIDTH; w++) {
             switch (level[h][w]) {
@@ -33,23 +34,46 @@ std::vector<std::vector<Node*>> mapOne() {
         }
     }
 
+    // Connect neighbors (standard euclidean connections)
     for (int h = 0; h < MAP_HEIGHT; h++) {
         for (int w = 0; w < MAP_WIDTH; w++) {
-            if (level[h][w] == '.') {
-                if (h > 0 && level[h - 1][w] != 'x') world[h][w]->addNeighbour(Direction::UP, world[h - 1][w]);
-                if (h < 15 && level[h + 1][w] != 'x') world[h][w]->addNeighbour(Direction::DOWN, world[h + 1][w]);
-                if (w > 0 && level[h][w - 1] != 'x') world[h][w]->addNeighbour(Direction::LEFT, world[h][w - 1]);
-                if (w < 29 && level[h][w + 1] != 'x') world[h][w]->addNeighbour(Direction::RIGHT, world[h][w + 1]);
+            if (level[h][w] == '.' || level[h][w] == 'x') {
+                if (h > 0 && (level[h - 1][w] == '.' || level[h - 1][w] == 'x'))
+                    world[h][w]->addNeighbour(Direction::UP, world[h - 1][w]);
+                if (h < MAP_HEIGHT - 1 && (level[h + 1][w] == '.' || level[h + 1][w] == 'x'))
+                    world[h][w]->addNeighbour(Direction::DOWN, world[h + 1][w]);
+                if (w > 0 && (level[h][w - 1] == '.' || level[h][w - 1] == 'x'))
+                    world[h][w]->addNeighbour(Direction::LEFT, world[h][w - 1]);
+                if (w < MAP_WIDTH - 1 && (level[h][w + 1] == '.' || level[h][w + 1] == 'x'))
+                    world[h][w]->addNeighbour(Direction::RIGHT, world[h][w + 1]);
             }
         }
     }
 
+    return world;
+}
+
+// Helper to cleanup world memory
+void cleanupWorld(std::vector<std::vector<Node*>>& world) {
+    for (int h = 0; h < MAP_HEIGHT; h++) {
+        for (int w = 0; w < MAP_WIDTH; w++) {
+            delete world[h][w];
+        }
+    }
+}
+
+// Level 1: Portal Basics
+std::vector<std::vector<Node*>> mapOne() {
+    auto world = buildWorld(level1);
+
+    // Vertical portal: top of red room <-> bottom of blue room
     world[5][7]->removeNeighbour(Direction::UP);
     world[5][7]->addNeighbour(Direction::UP, world[11][22]);
 
     world[11][22]->removeNeighbour(Direction::DOWN);
     world[11][22]->addNeighbour(Direction::DOWN, world[5][7]);
 
+    // Horizontal portal: green room wraps
     world[12][4]->removeNeighbour(Direction::LEFT);
     world[12][4]->addNeighbour(Direction::LEFT, world[12][8]);
 
@@ -59,10 +83,164 @@ std::vector<std::vector<Node*>> mapOne() {
     return world;
 }
 
-Player* loadPlayer() {
-    std::vector<std::vector<Node*>> world = mapOne();
+// Level 2: The Impossible Loop
+std::vector<std::vector<Node*>> mapTwo() {
+    auto world = buildWorld(level2);
 
-    // spawn at (8,4) facing 0.9 radians
+    // Create an impossible square loop
+    // Walking clockwise around blue room teleports you to yellow room
+    world[8][12]->removeNeighbour(Direction::RIGHT);
+    world[8][12]->addNeighbour(Direction::RIGHT, world[8][17]);
+
+    world[8][27]->removeNeighbour(Direction::DOWN);
+    world[8][27]->addNeighbour(Direction::DOWN, world[10][27]);
+
+    // Walking around yellow room returns you to a different location
+    world[10][17]->removeNeighbour(Direction::LEFT);
+    world[10][17]->addNeighbour(Direction::LEFT, world[10][3]);
+
+    // Green room is an exit that loops back impossibly
+    world[11][28]->removeNeighbour(Direction::DOWN);
+    world[11][28]->addNeighbour(Direction::DOWN, world[2][15]);
+
+    return world;
+}
+
+// Level 3: Bigger on the Inside (TARDIS)
+std::vector<std::vector<Node*>> mapThree() {
+    auto world = buildWorld(level3);
+
+    // Small blue box entrance
+    // Entering from any side puts you in the MASSIVE green room below
+    world[5][12]->removeNeighbour(Direction::DOWN);
+    world[5][12]->addNeighbour(Direction::DOWN, world[11][15]);
+
+    world[6][11]->removeNeighbour(Direction::RIGHT);
+    world[6][11]->addNeighbour(Direction::RIGHT, world[11][15]);
+
+    world[6][13]->removeNeighbour(Direction::LEFT);
+    world[6][13]->addNeighbour(Direction::LEFT, world[11][15]);
+
+    // The yellow inner room is even BIGGER than the green room containing it
+    world[13][4]->removeNeighbour(Direction::LEFT);
+    world[13][4]->addNeighbour(Direction::LEFT, world[13][27]);
+
+    world[13][27]->removeNeighbour(Direction::RIGHT);
+    world[13][27]->addNeighbour(Direction::RIGHT, world[13][4]);
+
+    return world;
+}
+
+// Level 4: The Mirror Maze
+std::vector<std::vector<Node*>> mapFour() {
+    auto world = buildWorld(level4);
+
+    // Left and right sides are the SAME space (mirror effect)
+    // Walking left puts you on the right
+    world[7][8]->removeNeighbour(Direction::LEFT);
+    world[7][8]->addNeighbour(Direction::LEFT, world[7][25]);
+
+    world[7][25]->removeNeighbour(Direction::RIGHT);
+    world[7][25]->addNeighbour(Direction::RIGHT, world[7][8]);
+
+    world[9][9]->removeNeighbour(Direction::LEFT);
+    world[9][9]->addNeighbour(Direction::LEFT, world[9][26]);
+
+    world[9][26]->removeNeighbour(Direction::RIGHT);
+    world[9][26]->addNeighbour(Direction::RIGHT, world[9][9]);
+
+    world[11][9]->removeNeighbour(Direction::LEFT);
+    world[11][9]->addNeighbour(Direction::LEFT, world[11][26]);
+
+    world[11][26]->removeNeighbour(Direction::RIGHT);
+    world[11][26]->addNeighbour(Direction::RIGHT, world[11][9]);
+
+    return world;
+}
+
+// Level 5: The Escher Staircase (Penrose Stairs)
+std::vector<std::vector<Node*>> mapFive() {
+    auto world = buildWorld(level5);
+
+    // Create impossible staircase loop
+    // Going "up" in a loop returns you to start
+    world[3][11]->removeNeighbour(Direction::UP);
+    world[3][11]->addNeighbour(Direction::UP, world[6][3]);
+
+    world[6][20]->removeNeighbour(Direction::RIGHT);
+    world[6][20]->addNeighbour(Direction::RIGHT, world[6][27]);
+
+    world[6][27]->removeNeighbour(Direction::RIGHT);
+    world[6][27]->addNeighbour(Direction::RIGHT, world[9][27]);
+
+    world[9][3]->removeNeighbour(Direction::LEFT);
+    world[9][3]->addNeighbour(Direction::LEFT, world[3][20]);
+
+    // Bottom room connects back impossibly
+    world[13][5]->removeNeighbour(Direction::LEFT);
+    world[13][5]->addNeighbour(Direction::LEFT, world[13][27]);
+
+    return world;
+}
+
+// Level 6: Recursive Rooms
+std::vector<std::vector<Node*>> mapSix() {
+    auto world = buildWorld(level6);
+
+    // Multiple entrances to "different" blue rooms are actually the SAME room
+    world[2][5]->removeNeighbour(Direction::DOWN);
+    world[2][5]->addNeighbour(Direction::DOWN, world[7][15]);
+
+    world[2][16]->removeNeighbour(Direction::DOWN);
+    world[2][16]->addNeighbour(Direction::DOWN, world[7][15]);
+
+    // The room contains itself recursively
+    world[5][6]->removeNeighbour(Direction::LEFT);
+    world[5][6]->addNeighbour(Direction::LEFT, world[5][17]);
+
+    world[4][17]->removeNeighbour(Direction::UP);
+    world[4][17]->addNeighbour(Direction::UP, world[2][5]);
+
+    // Green room wraps in on itself
+    world[12][6]->removeNeighbour(Direction::LEFT);
+    world[12][6]->addNeighbour(Direction::LEFT, world[12][28]);
+
+    world[12][28]->removeNeighbour(Direction::RIGHT);
+    world[12][28]->addNeighbour(Direction::RIGHT, world[12][6]);
+
+    return world;
+}
+
+// Load level based on number
+std::vector<std::vector<Node*>> loadLevel(int levelNum) {
+    switch (levelNum) {
+        case 1: return mapOne();
+        case 2: return mapTwo();
+        case 3: return mapThree();
+        case 4: return mapFour();
+        case 5: return mapFive();
+        case 6: return mapSix();
+        default: return mapOne();
+    }
+}
+
+// Get level name
+std::string getLevelName(int levelNum) {
+    switch (levelNum) {
+        case 1: return "Level 1: Portal Basics";
+        case 2: return "Level 2: The Impossible Loop";
+        case 3: return "Level 3: Bigger on the Inside";
+        case 4: return "Level 4: The Mirror Maze";
+        case 5: return "Level 5: The Escher Staircase";
+        case 6: return "Level 6: Recursive Rooms";
+        default: return "Level 1: Portal Basics";
+    }
+}
+
+Player* loadPlayer(int levelNum) {
+    std::vector<std::vector<Node*>> world = loadLevel(levelNum);
+
+    // Default spawn position
     Position pos;
     pos.node = world[8][4];
     pos.offset = std::complex<double>(0.5, 0.5);
@@ -82,8 +260,9 @@ int main() {
     sprite.setTexture(texture);
     sprite.setPosition(0, 0);
     sprite.setScale(scale, scale);
-    Player* player = loadPlayer();
-    
+
+    int currentLevel = 1;
+    Player* player = loadPlayer(currentLevel);
 
     sf::RenderWindow window(sf::VideoMode(X_DIM * scale, Y_DIM * scale), "Non-Euclidean Game Engine");
     window.setVerticalSyncEnabled(true);
@@ -97,6 +276,27 @@ int main() {
     }
 
     bool inGame = true;
+
+    // Level indicator text
+    sf::Text levelText;
+    levelText.setFont(font);
+    levelText.setCharacterSize(18);
+    levelText.setFillColor(sf::Color::White);
+    levelText.setStyle(sf::Text::Bold);
+    levelText.setPosition(10, 10);
+
+    // Instructions text
+    sf::Text instructionsText;
+    instructionsText.setFont(font);
+    instructionsText.setString("Press 1-6 to change levels | ESC for menu");
+    instructionsText.setCharacterSize(14);
+    instructionsText.setFillColor(sf::Color(255, 255, 255, 180));
+    instructionsText.setPosition(10, Y_DIM * scale - 25);
+
+    auto updateLevelText = [&]() {
+        levelText.setString(getLevelName(currentLevel));
+    };
+    updateLevelText();
 
     sf::RectangleShape quitButton(sf::Vector2f(200, 50));
     quitButton.setFillColor(sf::Color::Red);
@@ -130,6 +330,60 @@ int main() {
                 switch (e.key.code) {
                 case sf::Keyboard::Escape:
                     inGame = !inGame;
+                    break;
+                case sf::Keyboard::Num1:
+                case sf::Keyboard::Numpad1:
+                    if (currentLevel != 1) {
+                        delete player;
+                        currentLevel = 1;
+                        player = loadPlayer(currentLevel);
+                        updateLevelText();
+                    }
+                    break;
+                case sf::Keyboard::Num2:
+                case sf::Keyboard::Numpad2:
+                    if (currentLevel != 2) {
+                        delete player;
+                        currentLevel = 2;
+                        player = loadPlayer(currentLevel);
+                        updateLevelText();
+                    }
+                    break;
+                case sf::Keyboard::Num3:
+                case sf::Keyboard::Numpad3:
+                    if (currentLevel != 3) {
+                        delete player;
+                        currentLevel = 3;
+                        player = loadPlayer(currentLevel);
+                        updateLevelText();
+                    }
+                    break;
+                case sf::Keyboard::Num4:
+                case sf::Keyboard::Numpad4:
+                    if (currentLevel != 4) {
+                        delete player;
+                        currentLevel = 4;
+                        player = loadPlayer(currentLevel);
+                        updateLevelText();
+                    }
+                    break;
+                case sf::Keyboard::Num5:
+                case sf::Keyboard::Numpad5:
+                    if (currentLevel != 5) {
+                        delete player;
+                        currentLevel = 5;
+                        player = loadPlayer(currentLevel);
+                        updateLevelText();
+                    }
+                    break;
+                case sf::Keyboard::Num6:
+                case sf::Keyboard::Numpad6:
+                    if (currentLevel != 6) {
+                        delete player;
+                        currentLevel = 6;
+                        player = loadPlayer(currentLevel);
+                        updateLevelText();
+                    }
                     break;
                 }
                 break;
@@ -192,6 +446,8 @@ int main() {
             render(image, player);
             texture.update(image);
             window.draw(sprite);
+            window.draw(levelText);
+            window.draw(instructionsText);
         } else {
             window.setMouseCursorVisible(true);
             window.setMouseCursorGrabbed(false);
@@ -204,5 +460,6 @@ int main() {
         window.display();
     }
 
+    delete player;
     return 0;
 }
