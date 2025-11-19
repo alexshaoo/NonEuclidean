@@ -5,8 +5,9 @@ project(NonEuclidean VERSION 1.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Find SFML
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
+# Find SFML (supports both 2.5+ and 3.x)
+find_package(SFML COMPONENTS graphics window system REQUIRED)
+message(STATUS "Found SFML version: ${SFML_VERSION}")
 
 # Source files
 set(SOURCES
@@ -31,8 +32,12 @@ set(HEADERS
 # Create executable
 add_executable(NonEuclidean ${SOURCES} ${HEADERS})
 
-# Link SFML libraries
-target_link_libraries(NonEuclidean PRIVATE sfml-graphics sfml-window sfml-system)
+# Link SFML libraries (handle both SFML 2.x and 3.x target naming)
+if(SFML_VERSION VERSION_GREATER_EQUAL "3.0.0")
+    target_link_libraries(NonEuclidean PRIVATE SFML::Graphics SFML::Window SFML::System)
+else()
+    target_link_libraries(NonEuclidean PRIVATE sfml-graphics sfml-window sfml-system)
+endif()
 
 # Copy font file to build directory
 configure_file(${CMAKE_SOURCE_DIR}/NonEuclidean/ubuntu.ttf ${CMAKE_BINARY_DIR}/ubuntu.ttf COPYONLY)
