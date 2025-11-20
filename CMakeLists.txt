@@ -9,23 +9,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # SFML 3.x uses capitalized component names (Graphics, Window, System)
 # SFML 2.x uses lowercase (graphics, window, system)
 
-# Help CMake find SFML in common locations
-set(SFML_DIR "/usr/lib/cmake/SFML" CACHE PATH "SFML directory")
-if(NOT EXISTS "${SFML_DIR}/SFMLConfig.cmake")
-    set(SFML_DIR "/lib/cmake/SFML" CACHE PATH "SFML directory" FORCE)
-endif()
+# Directly set SFML_DIR to where SFMLConfig.cmake is located
+set(SFML_DIR "/usr/lib/cmake/SFML")
 
-# First try SFML 3.x with capitalized components
-find_package(SFML COMPONENTS Graphics Window System)
-
-if(NOT SFML_FOUND)
-    # If that fails, try SFML 2.x with lowercase components
-    find_package(SFML COMPONENTS graphics window system)
-endif()
-
-if(NOT SFML_FOUND)
-    message(FATAL_ERROR "SFML not found! Please install SFML 2.5+ or 3.x\nSearched in: ${CMAKE_PREFIX_PATH}")
-endif()
+# Find SFML 3.x with capitalized components (required for SFML 3.x)
+find_package(SFML REQUIRED COMPONENTS Graphics Window System)
 
 message(STATUS "Found SFML version: ${SFML_VERSION}")
 

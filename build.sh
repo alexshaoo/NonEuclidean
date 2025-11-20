@@ -13,9 +13,9 @@ fi
 # Navigate to build directory
 cd build
 
-# Run CMake
+# Run CMake with SFML_DIR explicitly set
 echo "Running CMake..."
-cmake ..
+cmake -DSFML_DIR=/usr/lib/cmake/SFML ..
 
 # Build the project
 echo "Compiling..."
