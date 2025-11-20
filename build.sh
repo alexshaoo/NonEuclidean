@@ -13,9 +13,17 @@ fi
 # Navigate to build directory
 cd build
 
-# Run CMake with SFML_DIR explicitly set
+# Clear CMake cache to avoid stale configuration
+echo "Clearing CMake cache..."
+rm -f CMakeCache.txt
+rm -rf CMakeFiles
+
+# Run CMake
+# If CMake can't find SFML automatically, you can help it by setting:
+#   -DSFML_DIR=/path/to/SFMLConfig.cmake directory
+#   or -DCMAKE_PREFIX_PATH=/usr/local (or wherever SFML is installed)
 echo "Running CMake..."
-cmake -DSFML_DIR=/usr/lib/cmake/SFML ..
+cmake ..
 
 # Build the project
 echo "Compiling..."

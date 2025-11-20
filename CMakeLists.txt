@@ -9,21 +9,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # SFML 3.x uses capitalized component names (Graphics, Window, System)
 # SFML 2.x uses lowercase (graphics, window, system)
 
-# Directly set SFML_DIR to where SFMLConfig.cmake is located
-set(SFML_DIR "/usr/lib/cmake/SFML")
+# Try to find SFML 3.x first, then fall back to any version
+find_package(SFML 3 QUIET COMPONENTS Graphics Window System)
 
-# Find SFML 3.x with capitalized components (required for SFML 3.x)
-find_package(SFML REQUIRED COMPONENTS Graphics Window System)
+if(NOT SFML_FOUND)
+    # Try finding any SFML version with capitalized components
+    find_package(SFML QUIET COMPONENTS Graphics Window System)
+endif()
 
-message(STATUS "Found SFML version: ${SFML_VERSION}")
-
-# Set library targets based on version
-if(SFML_VERSION VERSION_GREATER_EQUAL "3.0.0")
-    set(SFML_LIBRARIES SFML::Graphics SFML::Window SFML::System)
-    message(STATUS "Using SFML 3.x targets")
-else()
+if(NOT SFML_FOUND)
+    # Fall back to lowercase components for SFML 2.x
+    find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
     set(SFML_LIBRARIES sfml-graphics sfml-window sfml-system)
-    message(STATUS "Using SFML 2.x targets")
+    message(STATUS "Found SFML ${SFML_VERSION} (using 2.x targets)")
+else()
+    # SFML 3.x found
+    set(SFML_LIBRARIES SFML::Graphics SFML::Window SFML::System)
+    message(STATUS "Found SFML ${SFML_VERSION} (using 3.x targets)")
 endif()
 
 # Source files
