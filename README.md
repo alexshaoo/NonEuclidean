@@ -8,6 +8,7 @@ This project was built with:
 * C++ (C++17 or later)
 * SFML 2.5+ or 3.x library for graphics and input handling
 * CMake 3.16+ for cross-platform builds
+* Claude Code (web version). Super cool that it can understand my old code and iterate to build new levels so fast and easily
 
 ## Setup
 
