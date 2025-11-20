@@ -251,156 +251,168 @@ Player* loadPlayer(int levelNum) {
 }
 
 int main() {
+    // Create image and texture (SFML 3.x uses constructors)
     sf::Image image;
+    image.resize({X_DIM, Y_DIM});
+
     sf::Texture texture;
-    sf::Sprite sprite;
-    image.create(X_DIM, Y_DIM);
-    texture.create(X_DIM, Y_DIM);
-    texture.update(image);
-    sprite.setTexture(texture);
-    sprite.setPosition(0, 0);
-    sprite.setScale(scale, scale);
+    if (!texture.resize({X_DIM, Y_DIM})) {
+        std::cerr << "Failed to create texture!" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    sf::Sprite sprite(texture);
+    sprite.setPosition({0.f, 0.f});
+    sprite.setScale({static_cast<float>(scale), static_cast<float>(scale)});
 
     int currentLevel = 1;
     Player* player = loadPlayer(currentLevel);
 
-    sf::RenderWindow window(sf::VideoMode(X_DIM * scale, Y_DIM * scale), "Non-Euclidean Game Engine");
+    sf::RenderWindow window(sf::VideoMode({static_cast<unsigned int>(X_DIM * scale), static_cast<unsigned int>(Y_DIM * scale)}), "Non-Euclidean Game Engine");
     window.setVerticalSyncEnabled(true);
 
     sf::Vector2i oldMousePosition = sf::Mouse::getPosition(window);
 
-    sf::Font font;
-    if (!font.loadFromFile("./ubuntu.ttf")) {
+    // Load font (SFML 3.x changed API)
+    auto fontResult = sf::Font::openFromFile("./ubuntu.ttf");
+    if (!fontResult.has_value()) {
         std::cerr << "Failed to load font, check your system directory!" << std::endl;
         return EXIT_FAILURE;
     }
+    sf::Font font = std::move(fontResult.value());
 
     bool inGame = true;
 
-    // Level indicator text
-    sf::Text levelText;
-    levelText.setFont(font);
+    // Level indicator text (SFML 3.x requires font in constructor)
+    sf::Text levelText(font);
     levelText.setCharacterSize(18);
     levelText.setFillColor(sf::Color::White);
     levelText.setStyle(sf::Text::Bold);
-    levelText.setPosition(10, 10);
+    levelText.setPosition({10.f, 10.f});
 
     // Instructions text
-    sf::Text instructionsText;
-    instructionsText.setFont(font);
+    sf::Text instructionsText(font);
     instructionsText.setString("Press 1-6 to change levels | ESC for menu");
     instructionsText.setCharacterSize(14);
     instructionsText.setFillColor(sf::Color(255, 255, 255, 180));
-    instructionsText.setPosition(10, Y_DIM * scale - 25);
+    instructionsText.setPosition({10.f, static_cast<float>(Y_DIM * scale - 25)});
 
     auto updateLevelText = [&]() {
         levelText.setString(getLevelName(currentLevel));
     };
     updateLevelText();
 
-    sf::RectangleShape quitButton(sf::Vector2f(200, 50));
+    sf::RectangleShape quitButton({200.f, 50.f});
     quitButton.setFillColor(sf::Color::Red);
-    quitButton.setPosition((X_DIM * scale) / 2 - quitButton.getSize().x / 2, (Y_DIM * scale) / 2 - quitButton.getSize().y / 2 - 100);
+    quitButton.setPosition({(X_DIM * scale) / 2.f - 100.f, (Y_DIM * scale) / 2.f - 25.f - 100.f});
 
-    sf::Text quitButtonText;
-    quitButtonText.setFont(font);
+    sf::Text quitButtonText(font);
     quitButtonText.setString("Quit");
     quitButtonText.setCharacterSize(24);
     quitButtonText.setFillColor(sf::Color::White);
     quitButtonText.setStyle(sf::Text::Bold);
-    quitButtonText.setPosition(quitButton.getPosition().x + quitButton.getSize().x / 2 - quitButtonText.getLocalBounds().width / 2, quitButton.getPosition().y + quitButton.getSize().y / 2 - quitButtonText.getLocalBounds().height / 2);
+    auto quitBounds = quitButtonText.getLocalBounds();
+    quitButtonText.setPosition({quitButton.getPosition().x + 100.f - quitBounds.size.x / 2.f,
+                                 quitButton.getPosition().y + 25.f - quitBounds.size.y / 2.f});
 
-    sf::RectangleShape resumeButton(sf::Vector2f(200, 50));
+    sf::RectangleShape resumeButton({200.f, 50.f});
     resumeButton.setFillColor(sf::Color::Green);
-    resumeButton.setPosition((X_DIM * scale) / 2 - resumeButton.getSize().x / 2, (Y_DIM * scale) / 2 - resumeButton.getSize().y / 2 + 100);
+    resumeButton.setPosition({(X_DIM * scale) / 2.f - 100.f, (Y_DIM * scale) / 2.f - 25.f + 100.f});
 
-    sf::Text resumeButtonText;
-    resumeButtonText.setFont(font);
+    sf::Text resumeButtonText(font);
     resumeButtonText.setString("Resume");
     resumeButtonText.setCharacterSize(24);
     resumeButtonText.setFillColor(sf::Color::White);
     resumeButtonText.setStyle(sf::Text::Bold);
-    resumeButtonText.setPosition(resumeButton.getPosition().x + resumeButton.getSize().x / 2 - resumeButtonText.getLocalBounds().width / 2, resumeButton.getPosition().y + resumeButton.getSize().y / 2 - resumeButtonText.getLocalBounds().height / 2);
+    auto resumeBounds = resumeButtonText.getLocalBounds();
+    resumeButtonText.setPosition({resumeButton.getPosition().x + 100.f - resumeBounds.size.x / 2.f,
+                                   resumeButton.getPosition().y + 25.f - resumeBounds.size.y / 2.f});
 
     while (window.isOpen()) {
-        sf::Event e;
-        while (window.pollEvent(e)) {
-            switch (e.type) {
-            case sf::Event::KeyPressed:
-                switch (e.key.code) {
-                case sf::Keyboard::Escape:
-                    inGame = !inGame;
-                    break;
-                case sf::Keyboard::Num1:
-                case sf::Keyboard::Numpad1:
-                    if (currentLevel != 1) {
-                        delete player;
-                        currentLevel = 1;
-                        player = loadPlayer(currentLevel);
-                        updateLevelText();
-                    }
-                    break;
-                case sf::Keyboard::Num2:
-                case sf::Keyboard::Numpad2:
-                    if (currentLevel != 2) {
-                        delete player;
-                        currentLevel = 2;
-                        player = loadPlayer(currentLevel);
-                        updateLevelText();
-                    }
-                    break;
-                case sf::Keyboard::Num3:
-                case sf::Keyboard::Numpad3:
-                    if (currentLevel != 3) {
-                        delete player;
-                        currentLevel = 3;
-                        player = loadPlayer(currentLevel);
-                        updateLevelText();
-                    }
-                    break;
-                case sf::Keyboard::Num4:
-                case sf::Keyboard::Numpad4:
-                    if (currentLevel != 4) {
-                        delete player;
-                        currentLevel = 4;
-                        player = loadPlayer(currentLevel);
-                        updateLevelText();
-                    }
-                    break;
-                case sf::Keyboard::Num5:
-                case sf::Keyboard::Numpad5:
-                    if (currentLevel != 5) {
-                        delete player;
-                        currentLevel = 5;
-                        player = loadPlayer(currentLevel);
-                        updateLevelText();
-                    }
-                    break;
-                case sf::Keyboard::Num6:
-                case sf::Keyboard::Numpad6:
-                    if (currentLevel != 6) {
-                        delete player;
-                        currentLevel = 6;
-                        player = loadPlayer(currentLevel);
-                        updateLevelText();
-                    }
-                    break;
-                }
-                break;
-            case sf::Event::Closed:
+        // SFML 3.x event handling is completely different
+        while (auto event = window.pollEvent()) {
+            // Handle Closed event
+            if (event->is<sf::Event::Closed>()) {
                 window.close();
-                break;
-            case sf::Event::MouseButtonPressed:
+            }
+            // Handle KeyPressed event
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+                switch (keyPressed->code) {
+                    case sf::Keyboard::Key::Escape:
+                        inGame = !inGame;
+                        break;
+                    case sf::Keyboard::Key::Num1:
+                    case sf::Keyboard::Key::Numpad1:
+                        if (currentLevel != 1) {
+                            delete player;
+                            currentLevel = 1;
+                            player = loadPlayer(currentLevel);
+                            updateLevelText();
+                        }
+                        break;
+                    case sf::Keyboard::Key::Num2:
+                    case sf::Keyboard::Key::Numpad2:
+                        if (currentLevel != 2) {
+                            delete player;
+                            currentLevel = 2;
+                            player = loadPlayer(currentLevel);
+                            updateLevelText();
+                        }
+                        break;
+                    case sf::Keyboard::Key::Num3:
+                    case sf::Keyboard::Key::Numpad3:
+                        if (currentLevel != 3) {
+                            delete player;
+                            currentLevel = 3;
+                            player = loadPlayer(currentLevel);
+                            updateLevelText();
+                        }
+                        break;
+                    case sf::Keyboard::Key::Num4:
+                    case sf::Keyboard::Key::Numpad4:
+                        if (currentLevel != 4) {
+                            delete player;
+                            currentLevel = 4;
+                            player = loadPlayer(currentLevel);
+                            updateLevelText();
+                        }
+                        break;
+                    case sf::Keyboard::Key::Num5:
+                    case sf::Keyboard::Key::Numpad5:
+                        if (currentLevel != 5) {
+                            delete player;
+                            currentLevel = 5;
+                            player = loadPlayer(currentLevel);
+                            updateLevelText();
+                        }
+                        break;
+                    case sf::Keyboard::Key::Num6:
+                    case sf::Keyboard::Key::Numpad6:
+                        if (currentLevel != 6) {
+                            delete player;
+                            currentLevel = 6;
+                            player = loadPlayer(currentLevel);
+                            updateLevelText();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            // Handle MouseButtonPressed event
+            else if (event->is<sf::Event::MouseButtonPressed>()) {
                 if (!inGame) {
-                    if (quitButton.getGlobalBounds().contains(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y)) {
+                    auto mousePos = sf::Mouse::getPosition(window);
+                    if (quitButton.getGlobalBounds().contains(sf::Vector2f(mousePos))) {
                         window.close();
                     }
-                    if (resumeButton.getGlobalBounds().contains(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y)) {
+                    if (resumeButton.getGlobalBounds().contains(sf::Vector2f(mousePos))) {
                         inGame = true;
                     }
                 }
-                break;
-            case sf::Event::MouseMoved:
+            }
+            // Handle MouseMoved event
+            else if (event->is<sf::Event::MouseMoved>()) {
                 if (inGame) {
                     // Compute the difference between the old and the new position
                     sf::Vector2i diff = sf::Mouse::getPosition(window) - oldMousePosition;
@@ -411,7 +423,6 @@ int main() {
                     // Reset mouse position
                     sf::Mouse::setPosition(oldMousePosition, window);
                 }
-                break;
             }
         }
 
@@ -431,16 +442,16 @@ int main() {
             oldMousePosition = sf::Mouse::getPosition(window);
 
             player->rotate(rotate);
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
                 player->move(Direction::UP, PLAYER_MOVE_DISTANCE);
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
                 player->move(Direction::DOWN, PLAYER_MOVE_DISTANCE);
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
                 player->move(Direction::LEFT, PLAYER_MOVE_DISTANCE);
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
                 player->move(Direction::RIGHT, PLAYER_MOVE_DISTANCE);
             }
             render(image, player);
