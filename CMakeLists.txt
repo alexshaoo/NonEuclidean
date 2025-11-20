@@ -18,14 +18,44 @@ if(NOT SFML_FOUND)
 endif()
 
 if(NOT SFML_FOUND)
-    # Fall back to lowercase components for SFML 2.x
-    find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
-    set(SFML_LIBRARIES sfml-graphics sfml-window sfml-system)
-    message(STATUS "Found SFML ${SFML_VERSION} (using 2.x targets)")
+    # Try lowercase components for SFML 2.x
+    find_package(SFML 2.5 QUIET COMPONENTS graphics window system)
+endif()
+
+if(NOT SFML_FOUND)
+    # Last resort: try pkg-config (common on Linux)
+    find_package(PkgConfig QUIET)
+    if(PKG_CONFIG_FOUND)
+        pkg_check_modules(SFML QUIET sfml-all>=2.5)
+        if(NOT SFML_FOUND)
+            # Try individual components
+            pkg_check_modules(SFML_GRAPHICS REQUIRED sfml-graphics>=2.5)
+            pkg_check_modules(SFML_WINDOW REQUIRED sfml-window>=2.5)
+            pkg_check_modules(SFML_SYSTEM REQUIRED sfml-system>=2.5)
+
+            set(SFML_LIBRARIES ${SFML_GRAPHICS_LIBRARIES} ${SFML_WINDOW_LIBRARIES} ${SFML_SYSTEM_LIBRARIES})
+            set(SFML_INCLUDE_DIRS ${SFML_GRAPHICS_INCLUDE_DIRS})
+            include_directories(${SFML_INCLUDE_DIRS})
+            link_directories(${SFML_GRAPHICS_LIBRARY_DIRS})
+            message(STATUS "Found SFML via pkg-config")
+        else()
+            set(SFML_LIBRARIES ${SFML_LIBRARIES})
+            include_directories(${SFML_INCLUDE_DIRS})
+            link_directories(${SFML_LIBRARY_DIRS})
+            message(STATUS "Found SFML via pkg-config (sfml-all)")
+        endif()
+    else()
+        message(FATAL_ERROR "SFML not found. Please install SFML 2.5+ or 3.x")
+    endif()
 else()
-    # SFML 3.x found
-    set(SFML_LIBRARIES SFML::Graphics SFML::Window SFML::System)
-    message(STATUS "Found SFML ${SFML_VERSION} (using 3.x targets)")
+    # SFML found via CMake
+    if(SFML_VERSION VERSION_GREATER_EQUAL "3.0.0")
+        set(SFML_LIBRARIES SFML::Graphics SFML::Window SFML::System)
+        message(STATUS "Found SFML ${SFML_VERSION} (using 3.x targets)")
+    else()
+        set(SFML_LIBRARIES sfml-graphics sfml-window sfml-system)
+        message(STATUS "Found SFML ${SFML_VERSION} (using 2.x targets)")
+    endif()
 endif()
 
 # Source files
