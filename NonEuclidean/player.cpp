@@ -9,10 +9,10 @@ Position Player::getPosition() {
 
 void Player::setPosition(Position position)  {
     if (position.node == nullptr) {
-        throw std::runtime_error("[" __FUNCTION__ "] New node was a nullptr.");
+        throw std::runtime_error(std::string("[") + __FUNCTION__ + "] New node was a nullptr.");
     }
     if (position.offset.real() < 0.0 || position.offset.real() > 1.0 || position.offset.imag() < 0.0 || position.offset.imag() > 1.0) {
-        throw std::runtime_error("[" __FUNCTION__ "] Position out of bounds.");
+        throw std::runtime_error(std::string("[") + __FUNCTION__ + "] Position out of bounds.");
     }
     this->position = position;
 }
