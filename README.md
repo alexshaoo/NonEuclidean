@@ -6,13 +6,13 @@ NonEuclidean is a 3D game engine that simulates non-euclidean geometries. Player
 ## Technologies
 This project was built with:
 * C++ (C++17 or later)
-* SFML 2.5+ library for graphics and input handling
+* SFML 2.5+ or 3.x library for graphics and input handling
 * CMake 3.16+ for cross-platform builds
 
 ## Setup
 
 ### Prerequisites
-Install SFML 2.5 or later:
+Install SFML (version 2.5+ or 3.x supported):
 
 **macOS** (using Homebrew):
 ```bash
