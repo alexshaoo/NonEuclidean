@@ -273,13 +273,12 @@ int main() {
 
     sf::Vector2i oldMousePosition = sf::Mouse::getPosition(window);
 
-    // Load font (SFML 3.x changed API)
-    auto fontResult = sf::Font::openFromFile("./ubuntu.ttf");
-    if (!fontResult.has_value()) {
+    // Load font (SFML 3.x API)
+    sf::Font font;
+    if (!font.openFromFile("./ubuntu.ttf")) {
         std::cerr << "Failed to load font, check your system directory!" << std::endl;
         return EXIT_FAILURE;
     }
-    sf::Font font = std::move(fontResult.value());
 
     bool inGame = true;
 
