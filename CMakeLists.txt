@@ -6,8 +6,31 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find SFML (supports both 2.5+ and 3.x)
-find_package(SFML COMPONENTS graphics window system REQUIRED)
+# SFML 3.x uses capitalized component names (Graphics, Window, System)
+# SFML 2.x uses lowercase (graphics, window, system)
+
+# First try SFML 3.x with capitalized components
+find_package(SFML COMPONENTS Graphics Window System QUIET)
+
+if(NOT SFML_FOUND)
+    # If that fails, try SFML 2.x with lowercase components
+    find_package(SFML COMPONENTS graphics window system QUIET)
+endif()
+
+if(NOT SFML_FOUND)
+    message(FATAL_ERROR "SFML not found! Please install SFML 2.5+ or 3.x")
+endif()
+
 message(STATUS "Found SFML version: ${SFML_VERSION}")
+
+# Set library targets based on version
+if(SFML_VERSION VERSION_GREATER_EQUAL "3.0.0")
+    set(SFML_LIBRARIES SFML::Graphics SFML::Window SFML::System)
+    message(STATUS "Using SFML 3.x targets")
+else()
+    set(SFML_LIBRARIES sfml-graphics sfml-window sfml-system)
+    message(STATUS "Using SFML 2.x targets")
+endif()
 
 # Source files
 set(SOURCES
@@ -32,12 +55,8 @@ set(HEADERS
 # Create executable
 add_executable(NonEuclidean ${SOURCES} ${HEADERS})
 
-# Link SFML libraries (handle both SFML 2.x and 3.x target naming)
-if(SFML_VERSION VERSION_GREATER_EQUAL "3.0.0")
-    target_link_libraries(NonEuclidean PRIVATE SFML::Graphics SFML::Window SFML::System)
-else()
-    target_link_libraries(NonEuclidean PRIVATE sfml-graphics sfml-window sfml-system)
-endif()
+# Link SFML libraries (SFML_LIBRARIES was set during find_package)
+target_link_libraries(NonEuclidean PRIVATE ${SFML_LIBRARIES})
 
 # Copy font file to build directory
 configure_file(${CMAKE_SOURCE_DIR}/NonEuclidean/ubuntu.ttf ${CMAKE_BINARY_DIR}/ubuntu.ttf COPYONLY)
