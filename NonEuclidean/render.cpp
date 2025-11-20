@@ -9,10 +9,10 @@ void render(sf::Image& image, Player* player) {
 	// ceiling/floor
 	for (int x = 0; x < X_DIM; x++) {
 		for (int y = 0; y < Y_DIM; y++) {
-			image.setPixel(x, y, ceiling_colour);
+			image.setPixel({static_cast<unsigned int>(x), static_cast<unsigned int>(y)}, ceiling_colour);
 		}
 		for (int y = Y_DIM / 2; y < Y_DIM; y++) {
-			image.setPixel(x, y, floor_colour);
+			image.setPixel({static_cast<unsigned int>(x), static_cast<unsigned int>(y)}, floor_colour);
 		}
 	}
 
@@ -38,7 +38,7 @@ void render(sf::Image& image, Player* player) {
 			double tx = xOffset;
 			double ty = ((double)((double)y + 0.5 - (double)Y_DIM / 2) / originalWallHeight) + 0.5;
 			sf::Color colour = wall->getTexture()->data[(size_t)(ty * wall->getTexture()->height)][(size_t)(tx * wall->getTexture()->width)];
-			image.setPixel(x, y, colour);
+			image.setPixel({static_cast<unsigned int>(x), static_cast<unsigned int>(y)}, colour);
 		}
 	}
 }
