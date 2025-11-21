@@ -13,8 +13,8 @@ enum class Direction {
 class Node {
 private:
 	bool wall;
-	Node* neighbours[4];
 	Texture* texture;
+	Node* neighbours[4];
 public:
 	Node(bool wall, Texture* texture=nullptr);
 	virtual ~Node()=0;

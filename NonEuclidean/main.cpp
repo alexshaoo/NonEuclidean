@@ -273,10 +273,27 @@ int main() {
 
     sf::Vector2i oldMousePosition = sf::Mouse::getPosition(window);
 
-    // Load font (SFML 3.x API)
+    // Load font (SFML 3.x API) - try multiple locations
     sf::Font font;
-    if (!font.openFromFile("./ubuntu.ttf")) {
-        std::cerr << "Failed to load font, check your system directory!" << std::endl;
+    bool fontLoaded = false;
+    std::vector<std::string> fontPaths = {
+        "./ubuntu.ttf",              // Running from build directory
+        "./build/ubuntu.ttf",        // Running from parent directory
+        "./NonEuclidean/ubuntu.ttf"  // Original source location
+    };
+
+    for (const auto& path : fontPaths) {
+        if (font.openFromFile(path)) {
+            fontLoaded = true;
+            break;
+        }
+    }
+
+    if (!fontLoaded) {
+        std::cerr << "Failed to load font from any of the following locations:" << std::endl;
+        for (const auto& path : fontPaths) {
+            std::cerr << "  - " << path << std::endl;
+        }
         return EXIT_FAILURE;
     }
 
