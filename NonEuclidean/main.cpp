@@ -3,6 +3,22 @@
 #include "node.hpp"
 #include "player.hpp"
 
+// Global world storage - persists across entire program
+std::vector<std::vector<Node*>> currentWorld;
+
+// Cleanup function to delete all nodes in the world
+void cleanupWorld() {
+    for (auto& row : currentWorld) {
+        for (auto& node : row) {
+            if (node != nullptr) {
+                delete node;
+                node = nullptr;
+            }
+        }
+    }
+    currentWorld.clear();
+}
+
 // Helper function to build world from level data
 std::vector<std::vector<Node*>> buildWorld(const std::vector<std::string>& level) {
     std::vector<std::vector<Node*>> world(MAP_HEIGHT);
@@ -238,11 +254,15 @@ std::string getLevelName(int levelNum) {
 }
 
 Player* loadPlayer(int levelNum) {
-    std::vector<std::vector<Node*>> world = loadLevel(levelNum);
+    // Cleanup old world before loading new one
+    cleanupWorld();
+
+    // Load new level into global currentWorld
+    currentWorld = loadLevel(levelNum);
 
     // Default spawn position
     Position pos;
-    pos.node = world[8][4];
+    pos.node = currentWorld[8][4];
     pos.offset = std::complex<double>(0.5, 0.5);
     pos.angle = 0.9;
     Player* player = new Player(pos);
@@ -488,5 +508,6 @@ int main() {
     }
 
     delete player;
+    cleanupWorld();  // Clean up all nodes before exiting
     return 0;
 }
